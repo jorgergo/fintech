@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model PortfolioPosition {
+  id              Int      @id @default(autoincrement())
+  ticker          String   @unique
+  titles          Int
+  avgPriceMXN     Float
+  currentPriceMXN Float
+  isLegacy        Boolean  @default(false)
+  targetPct       Float    @default(0)
+  currency        String   @default("MXN")
+  description     String?
+  updatedAt       DateTime @updatedAt
+
+  transactions Transaction[]
+}
+
+model Transaction {
+  id            Int               @id @default(autoincrement())
+  positionId    Int
+  position      PortfolioPosition @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  type          String
+  titles        Int
+  pricePerTitle Float
+  commissionMXN Float
+  totalCostMXN  Float
+  isDeductible  Boolean           @default(true)
+  executedAt    DateTime          @default(now())
+  notes         String?
+}
+
+model CreditCard {
+  id             Int      @id @default(autoincrement())
+  name           String   @unique
+  creditLimit    Float
+  currentBalance Float    @default(0)
+  cutDay         Int      @default(0)
+  paymentDay     Int      @default(0)
+  isSecured      Boolean  @default(false)
+  annualRate     Float    @default(0)
+  notes          String?
+  updatedAt      DateTime @updatedAt
+}
+
+model TaxContribution {
+  id               Int      @id @default(autoincrement())
+  year             Int
+  month            Int
+  amountMXN        Float
+  deductibleAmount Float
+  excessAmount     Float
+  notes            String?
+  createdAt        DateTime @default(now())
+
+  @@unique([year, month])
+}
+
+model TaxConfig {
+  id                  Int   @id @default(autoincrement())
+  year                Int   @unique
+  annualGrossIncome   Float
+  annualTaxableIncome Float
+  marginalTaxRate     Float
+  umaAnnualValue      Float
+  maxDeduction        Float
+}
+
+model UserProfile {
+  id                  Int      @id @default(autoincrement())
+  birthYear           Int      @default(2002)
+  retirementAge       Int      @default(65)
+  monthlyContribution Float    @default(5500)
+  taxRegime           String   @default("SUELDOS_Y_SALARIOS")
+  hasW8Ben            Boolean?
+  commissionRate      Float    @default(0.0087)
+}
