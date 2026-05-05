@@ -4,6 +4,7 @@ import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import PortfolioSummary from "@/components/dashboard/PortfolioSummary";
 import TaxProgress from "@/components/dashboard/TaxProgress";
 import CardAlerts from "@/components/dashboard/CardAlerts";
+import PDFUploader from "@/components/upload/PDFUploader";
 import { calculateTaxSummary } from "@/lib/tax";
 import { getCardAlerts, totalUtilization } from "@/lib/cards";
 
@@ -112,6 +113,9 @@ export default async function DashboardPage() {
           </CardBody>
         </Card>
       </div>
+
+      {/* PDF Upload */}
+      <PDFUploader />
     </div>
   );
 }

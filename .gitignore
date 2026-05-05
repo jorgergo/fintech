@@ -14,3 +14,5 @@ src/generated/
 *.log
 .DS_Store
 next-env.d.ts
+
+gbm_positions/
