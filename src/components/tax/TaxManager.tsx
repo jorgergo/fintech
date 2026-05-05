@@ -72,16 +72,18 @@ export default function TaxManager({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 flex-wrap">
-        <span className="text-xs text-[var(--color-muted)]">Año fiscal</span>
+        <span className="text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold">
+          Ano fiscal
+        </span>
         <div className="flex gap-1">
           {configs.map((c) => (
             <button
               key={c.year}
               onClick={() => setYear(c.year)}
-              className={`px-3 py-1.5 rounded-md text-xs ${
+              className={`nb-btn px-3 py-1.5 text-xs font-[var(--font-mono)] font-bold uppercase ${
                 c.year === year
-                  ? "bg-[var(--color-accent)] text-white"
-                  : "bg-[var(--color-surface-2)] text-[var(--color-muted)] hover:text-[var(--color-text)]"
+                  ? "bg-[var(--color-primary)] text-black"
+                  : "bg-[var(--color-surface-2)] text-[var(--color-muted)]"
               }`}
             >
               {c.year}
@@ -109,7 +111,7 @@ export default function TaxManager({
                   tone="positive"
                 />
                 <Stat
-                  label="Devolución est."
+                  label="Devolucion est."
                   value={formatMXN(summary.estimatedRefund)}
                   tone="positive"
                 />
@@ -122,9 +124,9 @@ export default function TaxManager({
               <ProgressBar
                 value={summary.deductibleAmount}
                 max={summary.maxDeduction || 1}
-                tone={summary.progressPct >= 1 ? "positive" : "accent"}
+                tone={summary.progressPct >= 1 ? "positive" : "primary"}
               />
-              <div className="text-xs text-[var(--color-muted)] tabular">
+              <div className="text-xs text-[var(--color-muted)] tabular font-[var(--font-mono)]">
                 {formatPct(summary.progressPct)} del tope ·{" "}
                 {summary.monthlyTargetToMax > 0
                   ? `${formatMXN(summary.monthlyTargetToMax)}/mes para llegar al tope`
@@ -139,48 +141,54 @@ export default function TaxManager({
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={monthly}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-3)" />
                     <XAxis
                       dataKey="month"
                       stroke="var(--color-muted)"
                       fontSize={11}
+                      fontFamily="Space Mono, monospace"
                     />
                     <YAxis
                       stroke="var(--color-muted)"
                       fontSize={11}
+                      fontFamily="Space Mono, monospace"
                       tickFormatter={(v) => (v >= 1000 ? `${(v / 1000).toFixed(0)}k` : `${v}`)}
                     />
                     <Tooltip
                       contentStyle={{
                         background: "var(--color-surface-2)",
-                        border: "1px solid var(--color-border)",
-                        borderRadius: 8,
+                        border: "3px solid var(--color-border)",
+                        borderRadius: 0,
                         fontSize: 12,
+                        fontFamily: "Space Mono, monospace",
+                        boxShadow: "3px 3px 0px #000000",
                       }}
                       formatter={(v) => formatMXN(Number(v))}
                     />
                     <ReferenceLine
                       y={cfg.maxDeduction / 12}
-                      stroke="var(--color-accent)"
+                      stroke="var(--color-primary)"
                       strokeDasharray="3 3"
+                      strokeWidth={2}
                       label={{
-                        value: "Meta mensual",
-                        fill: "var(--color-accent)",
+                        value: "META",
+                        fill: "var(--color-primary)",
                         fontSize: 10,
                         position: "right",
+                        fontFamily: "Space Mono, monospace",
                       }}
                     />
                     <Bar
                       dataKey="deducible"
                       stackId="a"
-                      fill="#22c55e"
+                      fill="#a3e635"
                       radius={[0, 0, 0, 0]}
                     />
                     <Bar
                       dataKey="excedente"
                       stackId="a"
                       fill="#f59e0b"
-                      radius={[4, 4, 0, 0]}
+                      radius={[0, 0, 0, 0]}
                     />
                   </BarChart>
                 </ResponsiveContainer>
@@ -192,7 +200,7 @@ export default function TaxManager({
 
       <Card>
         <CardHeader
-          title="Bitácora de aportaciones"
+          title="Bitacora de aportaciones"
           subtitle="Edita un mes haciendo clic en su fila."
         />
         <CardBody>
@@ -204,7 +212,7 @@ export default function TaxManager({
       </Card>
 
       <Card>
-        <CardHeader title="Configuración fiscal" subtitle={`Año ${year}`} />
+        <CardHeader title="Configuracion fiscal" subtitle={`Ano ${year}`} />
         <CardBody>
           {cfg ? (
             <ConfigForm config={cfg} />
@@ -236,9 +244,9 @@ function ContributionsTable({
   const [editing, setEditing] = useState<number | null>(null);
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-sm tabular">
+      <table className="w-full text-sm tabular font-[var(--font-mono)]">
         <thead>
-          <tr className="text-left text-[11px] uppercase tracking-wider text-[var(--color-muted)] border-b border-[var(--color-border)]">
+          <tr className="text-left text-[11px] uppercase tracking-wider text-[var(--color-muted)] border-b-3 border-[var(--color-border)]">
             <th className="py-2 pr-3">Mes</th>
             <th className="py-2 pr-3 text-right">Aportado</th>
             <th className="py-2 pr-3 text-right">Deducible</th>
@@ -252,8 +260,8 @@ function ContributionsTable({
             const c = contributions.find((x) => x.month === month);
             const isEditing = editing === month;
             return (
-              <tr key={month} className="border-b border-[var(--color-border)]/50">
-                <td className="py-2 pr-3">{monthNameES(month)}</td>
+              <tr key={month} className="border-b border-[var(--color-border)]">
+                <td className="py-2 pr-3 font-bold">{monthNameES(month)}</td>
                 {isEditing ? (
                   <ContributionEditRow
                     year={year}
@@ -266,15 +274,15 @@ function ContributionsTable({
                     <td className="py-2 pr-3 text-right">
                       {c ? formatMXN(c.amountMXN) : "—"}
                     </td>
-                    <td className="py-2 pr-3 text-right text-emerald-400">
+                    <td className="py-2 pr-3 text-right text-[var(--color-positive)]">
                       {c ? formatMXN(c.deductibleAmount) : "—"}
                     </td>
-                    <td className="py-2 pr-3 text-right text-amber-400">
+                    <td className="py-2 pr-3 text-right text-[var(--color-warning)]">
                       {c ? formatMXN(c.excessAmount) : "—"}
                     </td>
                     <td className="py-2 pr-3 text-right">
                       <button
-                        className="text-xs text-[var(--color-accent)] hover:underline"
+                        className="text-xs text-[var(--color-primary)] font-bold hover:underline uppercase"
                         onClick={() => setEditing(month)}
                       >
                         {c ? "Editar" : "Agregar"}
@@ -332,30 +340,31 @@ function ContributionEditRow({
           step="0.01"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="w-32 px-2 py-1 rounded-md bg-[var(--color-surface-2)] border border-[var(--color-border)] text-xs tabular"
+          className="nb-input w-32 px-2 py-1 text-xs tabular"
           autoFocus
         />
         <button
           onClick={save}
           disabled={pending}
-          className="px-2 py-1 rounded-md text-xs bg-[var(--color-accent)] text-white"
+          className="nb-btn px-2 py-1 text-xs bg-[var(--color-primary)] text-black font-bold uppercase"
         >
-          Guardar
+          OK
         </button>
         {existing && (
           <button
             onClick={remove}
             disabled={pending}
-            className="px-2 py-1 rounded-md text-xs border border-red-500/30 text-red-400"
+            aria-label="Eliminar aportacion"
+            className="nb-btn px-2 py-1 text-xs bg-[var(--color-negative)] text-black font-bold"
           >
-            Eliminar
+            ✕
           </button>
         )}
         <button
           onClick={onClose}
-          className="px-2 py-1 rounded-md text-xs border border-[var(--color-border)]"
+          className="nb-btn px-2 py-1 text-xs bg-[var(--color-surface-2)] text-[var(--color-text)]"
         >
-          Cancelar
+          ESC
         </button>
       </div>
     </td>
@@ -390,54 +399,37 @@ function ConfigForm({ config }: { config: TaxConfig }) {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <Input
-          label="Ingreso anual bruto"
-          value={annualGross}
-          onChange={setAnnualGross}
-        />
-        <Input
-          label="Ingreso anual gravable"
-          value={annualTaxable}
-          onChange={setAnnualTaxable}
-        />
-        <Input
-          label="Tasa marginal (0–1)"
-          value={rate}
-          onChange={setRate}
-          step="0.01"
-        />
-        <Input
-          label="UMA anual"
-          value={uma}
-          onChange={setUma}
-        />
+        <Input label="Ingreso anual bruto" value={annualGross} onChange={setAnnualGross} />
+        <Input label="Ingreso anual gravable" value={annualTaxable} onChange={setAnnualTaxable} />
+        <Input label="Tasa marginal (0-1)" value={rate} onChange={setRate} step="0.01" />
+        <Input label="UMA anual" value={uma} onChange={setUma} />
       </div>
-      <div className="grid grid-cols-3 gap-3 text-xs tabular">
-        <div className="rounded-md bg-[var(--color-surface-2)] p-3">
-          <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)]">
-            10% gravable
+      <div className="grid grid-cols-3 gap-3 text-xs tabular font-[var(--font-mono)]">
+        <div className="border-3 border-[var(--color-border)] bg-[var(--color-surface-2)] p-3">
+          <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)] font-bold">
+            10% GRAVABLE
           </div>
-          <div className="mt-0.5">{formatMXN(ten)}</div>
+          <div className="mt-1 text-sm font-bold">{formatMXN(ten)}</div>
         </div>
-        <div className="rounded-md bg-[var(--color-surface-2)] p-3">
-          <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)]">
-            5 UMAs
+        <div className="border-3 border-[var(--color-border)] bg-[var(--color-surface-2)] p-3">
+          <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)] font-bold">
+            5 UMAS
           </div>
-          <div className="mt-0.5">{formatMXN(fiveU)}</div>
+          <div className="mt-1 text-sm font-bold">{formatMXN(fiveU)}</div>
         </div>
-        <div className="rounded-md bg-emerald-500/10 border border-emerald-500/20 p-3">
-          <div className="text-[11px] uppercase tracking-wider text-emerald-400">
-            Tope (mín.)
+        <div className="border-3 border-[var(--color-positive)] bg-[var(--color-positive)]/10 p-3">
+          <div className="text-[11px] uppercase tracking-wider text-[var(--color-positive)] font-bold">
+            TOPE (MIN.)
           </div>
-          <div className="mt-0.5 text-emerald-400">{formatMXN(max)}</div>
+          <div className="mt-1 text-sm font-bold text-[var(--color-positive)]">{formatMXN(max)}</div>
         </div>
       </div>
       <button
         onClick={save}
         disabled={pending}
-        className="px-4 py-2 rounded-md bg-[var(--color-accent)] text-white text-sm"
+        className="nb-btn px-5 py-2.5 bg-[var(--color-primary)] text-black font-[var(--font-heading)] text-sm uppercase disabled:opacity-50"
       >
-        {pending ? "Guardando..." : "Guardar configuración"}
+        {pending ? "GUARDANDO\u2026" : "GUARDAR CONFIGURACION"}
       </button>
     </div>
   );
@@ -456,7 +448,7 @@ function Input({
 }) {
   return (
     <label className="block">
-      <span className="text-[11px] uppercase tracking-wider text-[var(--color-muted)]">
+      <span className="text-[11px] uppercase tracking-wider text-[var(--color-muted)] font-[var(--font-mono)] font-bold">
         {label}
       </span>
       <input
@@ -464,7 +456,7 @@ function Input({
         step={step}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full px-3 py-2 rounded-md bg-[var(--color-surface-2)] border border-[var(--color-border)] text-sm tabular focus:outline-none focus:border-[var(--color-accent)]"
+        className="nb-input mt-1 w-full px-3 py-2 text-sm tabular"
       />
     </label>
   );

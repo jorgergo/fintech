@@ -16,3 +16,6 @@ src/generated/
 next-env.d.ts
 
 gbm_positions/
+.agents/
+.claude/
+skills-lock.json

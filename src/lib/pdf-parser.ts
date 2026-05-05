@@ -1,4 +1,6 @@
-import { PDFParse } from "pdf-parse";
+// pdf-parse v1 tries to read a test file on import; bypass by requiring the lib directly
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
+const pdf: (buf: Buffer) => Promise<{ text: string }> = require("pdf-parse/lib/pdf-parse.js");
 
 export interface ParsedPosition {
   ticker: string;
@@ -20,25 +22,10 @@ export interface ParsedStatement {
 
 /**
  * Parses a GBM "Consulta de posición" PDF.
- *
- * Each instrument row is a single line like:
- *   "VUAA N 5 +$2,391.360000 +$2,311.000000 +$11,555.00 -$401.80 -3.36% 28.91%"
- *
- * Liquidez line:
- *   "Liquidez +$0.31 0.00%"
- *
- * Total line:
- *   "+$39,966.74"  (line before "Total")
  */
 export async function parseGBMPositionPDF(buffer: Uint8Array): Promise<ParsedStatement> {
-  const parser = new PDFParse(buffer);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (parser as any).load();
-  const result = await parser.getText();
-  const text: string = result.text;
-  parser.destroy();
-
-  return parseGBMText(text);
+  const result = await pdf(Buffer.from(buffer));
+  return parseGBMText(result.text);
 }
 
 /** Exported for testing with raw text */
@@ -60,10 +47,11 @@ export function parseGBMText(text: string): ParsedStatement {
   }
 
   // Regex for instrument rows:
-  // <TICKER> <TITLES> <AVG_PRICE> <LAST_PRICE> <VALUE> <GAIN$> <GAIN%> <PORT%>
-  // e.g. "VUAA N 5 +$2,391.360000 +$2,311.000000 +$11,555.00 -$401.80 -3.36% 28.91%"
+  // PDF text extraction may or may not have spaces between fields.
+  // e.g. "VUAA N5+$2,391.360000+$2,311.000000+$11,555.00-$401.80-3.36%28.91%"
+  // Ticker ends with a letter (A-Z) or *, then titles (digits) follow.
   const instrumentRegex =
-    /^([A-Z][A-Z0-9]+(?:\s+[A-Z0-9*]+)?)\s+(\d[\d,]*)\s+([+-]\$[\d,.]+)\s+([+-]\$[\d,.]+)\s+([+-]\$[\d,.]+)\s+([+-]\$[\d,.]+)\s+([+-]?[\d.]+%)\s+([\d.]+%)$/;
+    /^([A-Z][A-Z0-9]+(?:\s+[A-Z*]+))(?:\s*)(\d[\d,]*)\s*([+-]\$[\d,.]+)\s*([+-]\$[\d,.]+)\s*([+-]\$[\d,.]+)\s*([+-]\$[\d,.]+)\s*([+-]?[\d.]+%)\s*([\d.]+%)$/;
 
   for (const line of lines) {
     const match = line.match(instrumentRegex);
@@ -85,21 +73,16 @@ export function parseGBMText(text: string): ParsedStatement {
     }
   }
 
-  // Extract cash from "Liquidez +$X.XX ..."
-  const liquidezMatch = text.match(/Liquidez\s+([+-]\$[\d,.]+)/);
+  // Extract cash from "Liquidez +$X.XX" — value has 2 decimal places
+  const liquidezMatch = text.match(/Liquidez\s*([+-]\$[\d,]+\.\d{2})/);
   if (liquidezMatch) {
     cashMXN = parseGBMNumber(liquidezMatch[1]);
   }
 
-  // Extract total: line before first "Total" that looks like a number
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i] === "Total" && i > 0) {
-      const candidate = lines[i - 1];
-      if (candidate.match(/^[+-]\$[\d,.]+$/)) {
-        totalValueMXN = parseGBMNumber(candidate);
-        break;
-      }
-    }
+  // Extract total: look for pattern like "+$39,966.74" followed by "Total"
+  const totalMatch = text.match(/([+-]\$[\d,.]+)\s*\n?\s*Total/);
+  if (totalMatch) {
+    totalValueMXN = parseGBMNumber(totalMatch[1]);
   }
 
   // Fallback

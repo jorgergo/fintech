@@ -13,20 +13,24 @@ export function Stat({
 }) {
   const color =
     tone === "positive"
-      ? "text-emerald-400"
+      ? "text-[var(--color-positive)]"
       : tone === "negative"
-        ? "text-red-400"
+        ? "text-[var(--color-negative)]"
         : tone === "warning"
-          ? "text-amber-400"
-          : "text-[var(--color-text)]";
+          ? "text-[var(--color-warning)]"
+          : "text-[var(--color-primary)]";
   return (
     <div>
-      <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)]">
+      <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)] font-[var(--font-mono)] font-bold">
         {label}
       </div>
-      <div className={`text-2xl font-semibold mt-1 tabular ${color}`}>{value}</div>
+      <div className={`text-2xl font-[var(--font-heading)] mt-1 tabular ${color}`}>
+        {value}
+      </div>
       {hint && (
-        <div className="text-xs text-[var(--color-muted)] mt-1 tabular">{hint}</div>
+        <div className="text-xs text-[var(--color-muted)] mt-1 tabular font-[var(--font-mono)]">
+          {hint}
+        </div>
       )}
     </div>
   );

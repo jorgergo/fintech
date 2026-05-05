@@ -1,13 +1,14 @@
 import { ReactNode } from "react";
 
-type Tone = "neutral" | "positive" | "negative" | "warning" | "accent";
+type Tone = "neutral" | "positive" | "negative" | "warning" | "accent" | "primary";
 
 const TONE_CLASSES: Record<Tone, string> = {
   neutral: "bg-[var(--color-surface-2)] text-[var(--color-muted)] border-[var(--color-border)]",
-  positive: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  negative: "bg-red-500/10 text-red-400 border-red-500/20",
-  warning: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  accent: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  positive: "bg-[var(--color-positive)] text-black border-black",
+  negative: "bg-[var(--color-negative)] text-black border-black",
+  warning: "bg-[var(--color-warning)] text-black border-black",
+  accent: "bg-[var(--color-accent)] text-black border-black",
+  primary: "bg-[var(--color-primary)] text-black border-black",
 };
 
 export function Badge({
@@ -21,7 +22,7 @@ export function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium border tabular ${TONE_CLASSES[tone]} ${className}`}
+      className={`inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider font-[var(--font-mono)] border-2 ${TONE_CLASSES[tone]} ${className}`}
     >
       {children}
     </span>

@@ -60,6 +60,38 @@ export async function uploadPositionPDF(formData: FormData): Promise<UploadResul
       updatedCount++;
     }
 
+    // Save monthly snapshot (upsert by year+month+ticker)
+    let snapshotYear = new Date().getFullYear();
+    let snapshotMonth = new Date().getMonth() + 1;
+    if (parsed.date) {
+      const parts = parsed.date.split("/");
+      if (parts.length === 3) {
+        snapshotMonth = parseInt(parts[1], 10);
+        snapshotYear = parseInt(parts[2], 10);
+      }
+    }
+
+    // Delete existing snapshot for this month then recreate
+    await prisma.positionSnapshot.deleteMany({
+      where: { year: snapshotYear, month: snapshotMonth },
+    });
+
+    await prisma.positionSnapshot.createMany({
+      data: parsed.positions.map((pos) => ({
+        year: snapshotYear,
+        month: snapshotMonth,
+        ticker: pos.ticker,
+        titles: pos.titles,
+        avgPriceMXN: pos.avgPriceMXN,
+        currentPriceMXN: pos.currentPriceMXN,
+        valueMXN: pos.valueMXN,
+        gainLossMXN: pos.gainLossMXN,
+        portfolioPct: pos.portfolioPct,
+        totalValueMXN: parsed.totalValueMXN,
+        cashMXN: parsed.cashMXN,
+      })),
+    });
+
     revalidatePath("/");
     revalidatePath("/rebalance");
     revalidatePath("/settings");

@@ -110,36 +110,36 @@ export default function Rebalancer({
         <CardBody className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label className="block">
-              <span className="text-xs text-[var(--color-muted)]">
-                Aportación de este mes (MXN)
+              <span className="text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold">
+                Aportacion de este mes (MXN)
               </span>
               <input
                 type="number"
                 step="0.01"
                 value={cashIn}
                 onChange={(e) => setCashIn(e.target.value)}
-                className="mt-1 w-full px-3 py-2 rounded-md bg-[var(--color-surface-2)] border border-[var(--color-border)] text-sm tabular focus:outline-none focus:border-[var(--color-accent)]"
+                className="nb-input mt-1 w-full px-3 py-2 text-sm tabular"
               />
             </label>
             <div>
-              <span className="text-xs text-[var(--color-muted)]">
-                Efectivo existente en PPR (GBMF2 + liquidez)
+              <span className="text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold">
+                Efectivo existente en PPR
               </span>
-              <div className="mt-1 px-3 py-2 rounded-md bg-[var(--color-surface-2)] border border-[var(--color-border)] text-sm tabular text-[var(--color-muted)]">
+              <div className="mt-1 px-3 py-2 border-3 border-[var(--color-border)] bg-[var(--color-surface-2)] text-sm tabular text-[var(--color-muted)] font-[var(--font-mono)]">
                 {formatMXN(existingCash)}
               </div>
             </div>
           </div>
 
           <div>
-            <div className="flex items-end justify-between mb-2 gap-3 flex-wrap">
-              <div className="text-xs text-[var(--color-muted)] uppercase tracking-wider">
-                Precios (MXN por título)
+            <div className="flex items-end justify-between mb-3 gap-3 flex-wrap">
+              <div className="text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold">
+                Precios (MXN por titulo)
               </div>
               <div className="flex items-end gap-2">
                 <label className="block">
-                  <span className="text-[10px] text-[var(--color-muted)]">
-                    USD/MXN (opcional)
+                  <span className="text-[10px] text-[var(--color-muted)] font-[var(--font-mono)]">
+                    USD/MXN
                   </span>
                   <input
                     type="number"
@@ -147,15 +147,15 @@ export default function Rebalancer({
                     value={usdRate}
                     onChange={(e) => setUsdRate(e.target.value)}
                     placeholder="20.00"
-                    className="mt-0.5 w-28 px-2 py-1 rounded-md bg-[var(--color-surface-2)] border border-[var(--color-border)] text-xs tabular"
+                    className="nb-input mt-0.5 w-28 px-2 py-1.5 text-xs tabular"
                   />
                 </label>
                 <button
                   type="button"
                   onClick={applyUSDRate}
-                  className="px-3 py-1.5 rounded-md text-xs bg-[var(--color-surface-2)] border border-[var(--color-border)] hover:border-[var(--color-accent)]"
+                  className="nb-btn px-3 py-1.5 text-xs bg-[var(--color-surface-2)] text-[var(--color-text)] font-[var(--font-mono)] uppercase"
                 >
-                  Convertir USD → MXN
+                  USD → MXN
                 </button>
               </div>
             </div>
@@ -165,14 +165,14 @@ export default function Rebalancer({
                   key={p.ticker}
                   className="grid grid-cols-12 gap-2 items-center"
                 >
-                  <div className="col-span-3 text-sm font-medium">
+                  <div className="col-span-3 text-sm font-[var(--font-heading)] uppercase">
                     {p.ticker}
                   </div>
-                  <div className="col-span-3 text-xs text-[var(--color-muted)] tabular">
-                    {formatPct(p.targetPct)} objetivo · {formatInt(p.titles)} títulos
+                  <div className="col-span-3 text-xs text-[var(--color-muted)] tabular font-[var(--font-mono)]">
+                    {formatPct(p.targetPct)} obj · {formatInt(p.titles)} tit
                   </div>
                   <label className="col-span-3 block">
-                    <span className="text-[10px] text-[var(--color-muted)]">USD</span>
+                    <span className="text-[10px] text-[var(--color-muted)] font-[var(--font-mono)]">USD</span>
                     <input
                       type="number"
                       step="0.01"
@@ -181,11 +181,11 @@ export default function Rebalancer({
                         setUsdPrices((s) => ({ ...s, [p.ticker]: e.target.value }))
                       }
                       placeholder="0.00"
-                      className="mt-0.5 w-full px-2 py-1.5 rounded-md bg-[var(--color-surface-2)] border border-[var(--color-border)] text-xs tabular"
+                      className="nb-input mt-0.5 w-full px-2 py-1.5 text-xs tabular"
                     />
                   </label>
                   <label className="col-span-3 block">
-                    <span className="text-[10px] text-[var(--color-muted)]">MXN</span>
+                    <span className="text-[10px] text-[var(--color-muted)] font-[var(--font-mono)]">MXN</span>
                     <input
                       type="number"
                       step="0.01"
@@ -194,7 +194,7 @@ export default function Rebalancer({
                         setPrices((s) => ({ ...s, [p.ticker]: e.target.value }))
                       }
                       placeholder="0.00"
-                      className="mt-0.5 w-full px-2 py-1.5 rounded-md bg-[var(--color-surface-2)] border border-[var(--color-border)] text-xs tabular focus:outline-none focus:border-[var(--color-accent)]"
+                      className="nb-input mt-0.5 w-full px-2 py-1.5 text-xs tabular"
                     />
                   </label>
                 </div>
@@ -206,9 +206,9 @@ export default function Rebalancer({
             <button
               onClick={calculate}
               disabled={isPending}
-              className="px-4 py-2 rounded-md bg-[var(--color-accent)] text-white text-sm font-medium hover:opacity-90 disabled:opacity-50"
+              className="nb-btn px-5 py-2.5 bg-[var(--color-primary)] text-black font-[var(--font-heading)] text-sm uppercase disabled:opacity-50"
             >
-              {isPending ? "Calculando..." : "Calcular compra óptima"}
+              {isPending ? "CALCULANDO\u2026" : "CALCULAR COMPRA OPTIMA"}
             </button>
           </div>
         </CardBody>
@@ -234,63 +234,63 @@ function ResultCard({
   return (
     <Card>
       <CardHeader
-        title="Recomendación"
-        subtitle="Whole-title greedy, balanceando contra el objetivo. Comisión 0.87% incluida."
+        title="Recomendacion"
+        subtitle="Whole-title greedy, balanceando contra el objetivo. Comision 0.87% incluida."
         action={
           <button
             onClick={onRecord}
             disabled={pending || recorded || buys.length === 0}
-            className="px-3 py-1.5 rounded-md text-xs font-medium bg-emerald-600 text-white hover:opacity-90 disabled:opacity-50"
+            className="nb-btn px-3 py-1.5 text-xs font-[var(--font-mono)] font-bold uppercase bg-[var(--color-positive)] text-black disabled:opacity-50"
           >
-            {recorded ? "✓ Registrado" : "Registrar esta compra"}
+            {recorded ? "✓ REGISTRADO" : "REGISTRAR COMPRA"}
           </button>
         }
       />
       <CardBody className="space-y-5">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>
-            <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)]">
-              Aportación
+            <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)] font-[var(--font-mono)] font-bold">
+              Aportacion
             </div>
-            <div className="tabular mt-0.5">{formatMXN(result.totals.cashIn)}</div>
+            <div className="tabular mt-1 font-[var(--font-heading)] text-lg">{formatMXN(result.totals.cashIn)}</div>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)]">
+            <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)] font-[var(--font-mono)] font-bold">
               Invertido
             </div>
-            <div className="tabular mt-0.5">{formatMXN(result.totals.spent)}</div>
+            <div className="tabular mt-1 font-[var(--font-heading)] text-lg">{formatMXN(result.totals.spent)}</div>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)]">
+            <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)] font-[var(--font-mono)] font-bold">
               Comisiones
             </div>
-            <div className="tabular mt-0.5 text-amber-400">
+            <div className="tabular mt-1 font-[var(--font-heading)] text-lg text-[var(--color-warning)]">
               {formatMXN(result.totals.commissions)}
             </div>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)]">
+            <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)] font-[var(--font-mono)] font-bold">
               Remanente → GBMF2
             </div>
-            <div className="tabular mt-0.5">
+            <div className="tabular mt-1 font-[var(--font-heading)] text-lg">
               {formatMXN(result.totals.cashRemainder)}
             </div>
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-sm tabular">
+          <table className="w-full text-sm tabular font-[var(--font-mono)]">
             <thead>
-              <tr className="text-left text-[11px] uppercase tracking-wider text-[var(--color-muted)] border-b border-[var(--color-border)]">
+              <tr className="text-left text-[11px] uppercase tracking-wider text-[var(--color-muted)] border-b-3 border-[var(--color-border)]">
                 <th className="py-2 pr-3">Ticker</th>
                 <th className="py-2 pr-3 text-right">Comprar</th>
                 <th className="py-2 pr-3 text-right">Precio</th>
                 <th className="py-2 pr-3 text-right">Bruto</th>
-                <th className="py-2 pr-3 text-right">Comisión</th>
+                <th className="py-2 pr-3 text-right">Comision</th>
                 <th className="py-2 pr-3 text-right">Total</th>
-                <th className="py-2 pr-3 text-right">Títulos finales</th>
+                <th className="py-2 pr-3 text-right">Titulos fin.</th>
                 <th className="py-2 pr-3 text-right">% antes</th>
-                <th className="py-2 pr-3 text-right">% después</th>
+                <th className="py-2 pr-3 text-right">% despues</th>
                 <th className="py-2 pr-3 text-right">Drift</th>
               </tr>
             </thead>
@@ -298,23 +298,23 @@ function ResultCard({
               {result.lines.map((l) => {
                 const buyTone =
                   l.titlesToBuy > 0
-                    ? "text-emerald-400"
+                    ? "text-[var(--color-positive)] font-bold"
                     : "text-[var(--color-muted)]";
                 const driftAbs = Math.abs(l.drift);
                 const driftTone =
                   l.targetPct === 0
                     ? "text-[var(--color-muted)]"
                     : driftAbs < 0.02
-                      ? "text-emerald-400"
+                      ? "text-[var(--color-positive)]"
                       : driftAbs < 0.05
-                        ? "text-amber-400"
-                        : "text-red-400";
+                        ? "text-[var(--color-warning)]"
+                        : "text-[var(--color-negative)]";
                 return (
                   <tr
                     key={l.ticker}
-                    className="border-b border-[var(--color-border)]/50"
+                    className="border-b border-[var(--color-border)]"
                   >
-                    <td className="py-2 pr-3 font-medium">{l.ticker}</td>
+                    <td className="py-2 pr-3 font-bold">{l.ticker}</td>
                     <td className={`py-2 pr-3 text-right ${buyTone}`}>
                       {l.titlesToBuy > 0 ? `+${formatInt(l.titlesToBuy)}` : "—"}
                     </td>
@@ -324,7 +324,7 @@ function ResultCard({
                     <td className="py-2 pr-3 text-right">
                       {l.grossCost > 0 ? formatMXN(l.grossCost) : "—"}
                     </td>
-                    <td className="py-2 pr-3 text-right text-amber-400">
+                    <td className="py-2 pr-3 text-right text-[var(--color-warning)]">
                       {l.commissionMXN > 0 ? formatMXN(l.commissionMXN) : "—"}
                     </td>
                     <td className="py-2 pr-3 text-right">
@@ -364,19 +364,19 @@ function AllocationCompare({
 }) {
   return (
     <div>
-      <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)] mb-2">
-        Asignación: antes → después
+      <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)] font-[var(--font-mono)] font-bold mb-3">
+        Asignacion: antes → despues
       </div>
-      <div className="space-y-2">
+      <div className="space-y-3">
         {lines.map((l) => (
           <div key={l.ticker} className="space-y-1">
-            <div className="flex items-center justify-between text-xs tabular">
-              <span className="font-medium">{l.ticker}</span>
+            <div className="flex items-center justify-between text-xs tabular font-[var(--font-mono)]">
+              <span className="font-bold">{l.ticker}</span>
               <span className="text-[var(--color-muted)]">
                 {formatPct(l.currentPct)} → {formatPct(l.newPct)}
                 {l.targetPct > 0 && (
                   <Badge tone="neutral" className="ml-2">
-                    obj {formatPct(l.targetPct)}
+                    OBJ {formatPct(l.targetPct)}
                   </Badge>
                 )}
               </span>

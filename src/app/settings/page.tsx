@@ -10,11 +10,13 @@ export default async function SettingsPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h2 className="text-lg font-semibold text-[var(--color-text)]">Configuración</h2>
-        <p className="text-sm text-[var(--color-muted)] mt-1">
-          Perfil, instrumentos y gestión de datos
+        <h2 className="font-[var(--font-heading)] text-3xl uppercase tracking-tight">
+          Configuracion
+        </h2>
+        <p className="text-sm text-[var(--color-muted)] font-[var(--font-mono)] mt-2 uppercase tracking-wider">
+          Perfil, instrumentos y gestion de datos
         </p>
       </div>
 

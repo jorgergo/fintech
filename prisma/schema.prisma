@@ -73,6 +73,25 @@ model TaxConfig {
   maxDeduction          Float
 }
 
+model PositionSnapshot {
+  id              Int       @id @default(autoincrement())
+  year            Int
+  month           Int
+  ticker          String
+  titles          Int
+  avgPriceMXN     Float
+  currentPriceMXN Float
+  valueMXN        Float
+  gainLossMXN     Float
+  portfolioPct    Float
+  totalValueMXN   Float
+  cashMXN         Float     @default(0)
+  uploadedAt      DateTime  @default(now())
+
+  @@unique([year, month, ticker])
+  @@index([year, month])
+}
+
 model UserProfile {
   id                    Int     @id @default(autoincrement())
   birthYear             Int     @default(2002)

@@ -19,7 +19,7 @@ interface PositionView {
   targetPct: number;
 }
 
-const COLORS = ["#5b9dff", "#22c55e", "#f59e0b", "#a855f7", "#ec4899", "#06b6d4"];
+const COLORS = ["#ffd93d", "#a3e635", "#c084fc", "#ff6b6b", "#f59e0b", "#06b6d4"];
 
 export default function PortfolioSummary({
   positions,
@@ -49,7 +49,6 @@ export default function PortfolioSummary({
       pct: totalValue > 0 ? p.value / totalValue : 0,
     }));
 
-  // Drift from target (only for active non-legacy with target > 0)
   const activeValue = enriched
     .filter((p) => !p.isLegacy && p.targetPct > 0)
     .reduce((s, p) => s + p.value, 0);
@@ -61,17 +60,17 @@ export default function PortfolioSummary({
     });
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="grid grid-cols-2 gap-6">
-        <Stat label="Valor del portafolio" value={formatMXN(totalValue)} />
+    <div className="space-y-5">
+      <div className="grid grid-cols-2 gap-4">
+        <Stat label="Valor" value={formatMXN(totalValue)} />
         <Stat
-          label="Ganancia / pérdida"
+          label="G/P"
           value={formatSignedMXN(totalPL)}
           hint={formatSignedPct(totalPLPct)}
           tone={totalPL >= 0 ? "positive" : "negative"}
         />
         <Stat
-          label="Comisiones (año en curso)"
+          label="Comisiones (YTD)"
           value={formatMXN(commissionsYTD)}
           tone="warning"
         />
@@ -79,62 +78,20 @@ export default function PortfolioSummary({
           label="Posiciones"
           value={enriched.filter((p) => p.titles > 0).length}
         />
-        <div className="col-span-2">
-          <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted)] mb-2">
-            Drift vs objetivo (activos)
-          </div>
-          <div className="space-y-2">
-            {drift.length === 0 && (
-              <div className="text-xs text-[var(--color-muted)]">
-                Sin instrumentos activos con objetivo configurado.
-              </div>
-            )}
-            {drift.map((d) => {
-              const tone =
-                Math.abs(d.drift) < 0.02
-                  ? "positive"
-                  : Math.abs(d.drift) < 0.05
-                    ? "warning"
-                    : "negative";
-              const color =
-                tone === "positive"
-                  ? "var(--color-positive)"
-                  : tone === "warning"
-                    ? "var(--color-warning)"
-                    : "var(--color-negative)";
-              return (
-                <div key={d.ticker} className="flex items-center gap-3 text-xs tabular">
-                  <div className="w-20 truncate text-[var(--color-muted)]">{d.ticker}</div>
-                  <div className="flex-1 h-1.5 bg-[var(--color-surface-2)] rounded-full overflow-hidden">
-                    <div
-                      className="h-full"
-                      style={{
-                        width: `${Math.min(100, d.actual * 100)}%`,
-                        background: color,
-                      }}
-                    />
-                  </div>
-                  <div className="w-16 text-right">{formatPct(d.actual)}</div>
-                  <div className="w-16 text-right text-[var(--color-muted)]">
-                    obj {formatPct(d.target)}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
       </div>
-      <div className="h-64 -mx-2 -mb-2">
+
+      <div className="h-48" role="img" aria-label="Grafica de asignacion del portafolio">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={chartData}
               dataKey="value"
               nameKey="name"
-              innerRadius={55}
-              outerRadius={90}
+              innerRadius={40}
+              outerRadius={70}
               paddingAngle={2}
               stroke="var(--color-surface)"
+              strokeWidth={3}
             >
               {chartData.map((_, i) => (
                 <Cell key={i} fill={COLORS[i % COLORS.length]} />
@@ -143,9 +100,11 @@ export default function PortfolioSummary({
             <Tooltip
               contentStyle={{
                 background: "var(--color-surface-2)",
-                border: "1px solid var(--color-border)",
-                borderRadius: 8,
-                fontSize: 12,
+                border: "3px solid var(--color-border)",
+                borderRadius: 0,
+                fontSize: 11,
+                fontFamily: "Space Mono, monospace",
+                boxShadow: "3px 3px 0px #000000",
               }}
               formatter={(v, _n, item) => {
                 const pct = ((item as { payload?: { pct: number } }).payload as { pct: number }).pct;
@@ -154,19 +113,56 @@ export default function PortfolioSummary({
             />
           </PieChart>
         </ResponsiveContainer>
-        <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 px-2 text-[11px]">
+        <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] font-[var(--font-mono)]">
           {chartData.map((d, i) => (
-            <div key={d.name} className="flex items-center gap-1.5 tabular">
+            <div key={d.name} className="flex items-center gap-1 tabular">
               <span
-                className="inline-block w-2 h-2 rounded-sm"
+                className="inline-block w-2.5 h-2.5 border-2 border-black"
                 style={{ background: COLORS[i % COLORS.length] }}
+                aria-hidden="true"
               />
               <span className="text-[var(--color-muted)]">{d.name}</span>
-              <span>{formatPct(d.pct)}</span>
+              <span className="font-bold">{formatPct(d.pct)}</span>
             </div>
           ))}
         </div>
       </div>
+
+      {drift.length > 0 && (
+        <div>
+          <div className="text-[10px] uppercase tracking-wider text-[var(--color-muted)] font-[var(--font-mono)] font-bold mb-2">
+            Drift vs objetivo
+          </div>
+          <div className="space-y-2">
+            {drift.map((d) => {
+              const tone =
+                Math.abs(d.drift) < 0.02
+                  ? "var(--color-positive)"
+                  : Math.abs(d.drift) < 0.05
+                    ? "var(--color-warning)"
+                    : "var(--color-negative)";
+              return (
+                <div key={d.ticker} className="flex items-center gap-2 text-[10px] tabular font-[var(--font-mono)]">
+                  <div className="w-16 truncate text-[var(--color-muted)] font-bold">{d.ticker}</div>
+                  <div className="flex-1 h-2.5 border-2 border-[var(--color-border)] bg-[var(--color-surface-2)] overflow-hidden">
+                    <div
+                      className="h-full"
+                      style={{
+                        width: `${Math.min(100, d.actual * 100)}%`,
+                        background: tone,
+                      }}
+                    />
+                  </div>
+                  <div className="w-12 text-right">{formatPct(d.actual)}</div>
+                  <div className="w-14 text-right text-[var(--color-muted)]">
+                    obj {formatPct(d.target)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

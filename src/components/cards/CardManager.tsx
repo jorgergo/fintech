@@ -31,7 +31,7 @@ export default function CardManager({ cards }: { cards: CreditCardLite[] }) {
         <Card>
           <CardBody>
             <Stat
-              label="Utilización global"
+              label="Utilizacion global"
               value={formatPct(util.pct)}
               hint={`${formatMXN(util.totalBalance)} / ${formatMXN(util.totalLimit)}`}
               tone={
@@ -43,8 +43,8 @@ export default function CardManager({ cards }: { cards: CreditCardLite[] }) {
               }
             />
             {util.pct > 0.3 && (
-              <div className="mt-3 text-xs text-amber-400">
-                Por debajo de 30% es lo recomendado para historial crediticio.
+              <div className="mt-3 text-xs text-[var(--color-warning)] font-[var(--font-mono)]">
+                Por debajo de 30% es lo recomendado.
               </div>
             )}
           </CardBody>
@@ -52,7 +52,7 @@ export default function CardManager({ cards }: { cards: CreditCardLite[] }) {
         <Card>
           <CardBody>
             <Stat
-              label="Crédito total disponible"
+              label="Credito disponible"
               value={formatMXN(util.totalLimit - util.totalBalance)}
             />
           </CardBody>
@@ -70,10 +70,10 @@ export default function CardManager({ cards }: { cards: CreditCardLite[] }) {
           subtitle="Edita el saldo, fecha de corte y fecha de pago directamente."
           action={
             <button
-              className="px-3 py-1.5 rounded-md text-xs bg-[var(--color-surface-2)] border border-[var(--color-border)] hover:border-[var(--color-accent)]"
+              className="nb-btn px-3 py-1.5 text-xs font-[var(--font-mono)] font-bold uppercase bg-[var(--color-surface-2)] text-[var(--color-text)]"
               onClick={() => setAdding(true)}
             >
-              + Agregar tarjeta
+              + AGREGAR
             </button>
           }
         />
@@ -88,7 +88,7 @@ export default function CardManager({ cards }: { cards: CreditCardLite[] }) {
       <Card>
         <CardHeader
           title="Calendario de pagos"
-          subtitle="Próximas fechas de corte y pago."
+          subtitle="Proximas fechas de corte y pago."
         />
         <CardBody>
           <PaymentCalendar cards={cards} today={today} />
@@ -105,21 +105,21 @@ function CardRow({ card, today }: { card: CreditCardLite; today: Date }) {
     sev === "danger" ? "negative" : sev === "warning" ? "warning" : "positive";
   const [editing, setEditing] = useState(false);
   return (
-    <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] p-4">
+    <div className="border-3 border-[var(--color-border)] bg-[var(--color-surface-2)] p-4">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="text-sm font-semibold">{card.name}</div>
-          {card.isSecured && <Badge tone="accent">Garantizada</Badge>}
+          <div className="text-sm font-[var(--font-heading)] uppercase">{card.name}</div>
+          {card.isSecured && <Badge tone="accent">GARANTIZADA</Badge>}
           <Badge tone={tone}>{formatPct(util)}</Badge>
         </div>
-        <div className="flex items-center gap-4 text-xs tabular text-[var(--color-muted)]">
-          <span>Corte día {card.cutDay || "—"}</span>
-          <span>Pago día {card.paymentDay || "—"}</span>
+        <div className="flex items-center gap-4 text-xs tabular text-[var(--color-muted)] font-[var(--font-mono)]">
+          <span>CORTE {card.cutDay || "—"}</span>
+          <span>PAGO {card.paymentDay || "—"}</span>
           <button
             onClick={() => setEditing((v) => !v)}
-            className="px-2 py-1 rounded-md border border-[var(--color-border)] hover:border-[var(--color-accent)] text-[var(--color-text)]"
+            className="nb-btn px-2 py-1 text-[var(--color-text)] bg-[var(--color-surface)]"
           >
-            {editing ? "Cerrar" : "Editar"}
+            {editing ? "CERRAR" : "EDITAR"}
           </button>
         </div>
       </div>
@@ -127,7 +127,7 @@ function CardRow({ card, today }: { card: CreditCardLite; today: Date }) {
         <div className="flex-1">
           <ProgressBar value={card.currentBalance} max={card.creditLimit || 1} tone={tone} />
         </div>
-        <div className="text-xs tabular text-[var(--color-muted)]">
+        <div className="text-xs tabular text-[var(--color-muted)] font-[var(--font-mono)]">
           {formatMXN(card.currentBalance)} / {formatMXN(card.creditLimit)}
         </div>
       </div>
@@ -172,21 +172,22 @@ function CardEditor({
   return (
     <div className="mt-4 grid grid-cols-2 md:grid-cols-5 gap-2">
       <Input label="Saldo" value={balance} onChange={setBalance} />
-      <Input label="Límite" value={limit} onChange={setLimit} />
-      <Input label="Día corte" value={cut} onChange={setCut} />
-      <Input label="Día pago" value={pay} onChange={setPay} />
+      <Input label="Limite" value={limit} onChange={setLimit} />
+      <Input label="Dia corte" value={cut} onChange={setCut} />
+      <Input label="Dia pago" value={pay} onChange={setPay} />
       <div className="flex items-end gap-2">
         <button
           onClick={save}
           disabled={pending}
-          className="flex-1 px-3 py-2 rounded-md text-xs bg-[var(--color-accent)] text-white"
+          className="nb-btn flex-1 px-3 py-2 text-xs bg-[var(--color-primary)] text-black font-[var(--font-mono)] font-bold uppercase"
         >
-          Guardar
+          GUARDAR
         </button>
         <button
           onClick={remove}
           disabled={pending}
-          className="px-3 py-2 rounded-md text-xs border border-red-500/30 text-red-400 hover:bg-red-500/10"
+          aria-label="Eliminar tarjeta"
+          className="nb-btn px-3 py-2 text-xs bg-[var(--color-negative)] text-black font-[var(--font-mono)] font-bold"
         >
           ✕
         </button>
@@ -214,10 +215,10 @@ function NewCardForm({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className="rounded-lg border border-dashed border-[var(--color-border)] p-4 grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
+    <div className="border-3 border-dashed border-[var(--color-border)] p-4 grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
       <Input label="Nombre" value={name} onChange={setName} type="text" />
-      <Input label="Límite" value={limit} onChange={setLimit} />
-      <label className="flex items-center gap-2 text-xs">
+      <Input label="Limite" value={limit} onChange={setLimit} />
+      <label className="flex items-center gap-2 text-xs font-[var(--font-mono)] uppercase">
         <input
           type="checkbox"
           checked={secured}
@@ -229,15 +230,15 @@ function NewCardForm({ onClose }: { onClose: () => void }) {
         <button
           onClick={save}
           disabled={pending}
-          className="flex-1 px-3 py-2 rounded-md text-xs bg-emerald-600 text-white"
+          className="nb-btn flex-1 px-3 py-2 text-xs bg-[var(--color-positive)] text-black font-[var(--font-mono)] font-bold uppercase"
         >
-          Crear
+          CREAR
         </button>
         <button
           onClick={onClose}
-          className="px-3 py-2 rounded-md text-xs border border-[var(--color-border)]"
+          className="nb-btn px-3 py-2 text-xs bg-[var(--color-surface-2)] text-[var(--color-text)] font-[var(--font-mono)]"
         >
-          Cancelar
+          CANCELAR
         </button>
       </div>
     </div>
@@ -257,7 +258,7 @@ function Input({
 }) {
   return (
     <label className="block">
-      <span className="text-[10px] text-[var(--color-muted)] uppercase tracking-wider">
+      <span className="text-[10px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold">
         {label}
       </span>
       <input
@@ -265,7 +266,7 @@ function Input({
         step="0.01"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-0.5 w-full px-2 py-1.5 rounded-md bg-[var(--color-surface)] border border-[var(--color-border)] text-xs tabular focus:outline-none focus:border-[var(--color-accent)]"
+        className="nb-input mt-0.5 w-full px-2 py-1.5 text-xs tabular"
       />
     </label>
   );
@@ -295,44 +296,44 @@ function PaymentCalendar({
 
   if (events.length === 0) {
     return (
-      <div className="text-xs text-[var(--color-muted)]">
-        Configura los días de corte y pago en cada tarjeta.
+      <div className="text-xs text-[var(--color-muted)] font-[var(--font-mono)]">
+        Configura los dias de corte y pago en cada tarjeta.
       </div>
     );
   }
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-sm tabular">
+      <table className="w-full text-sm tabular font-[var(--font-mono)]">
         <thead>
-          <tr className="text-left text-[11px] uppercase tracking-wider text-[var(--color-muted)] border-b border-[var(--color-border)]">
+          <tr className="text-left text-[11px] uppercase tracking-wider text-[var(--color-muted)] border-b-3 border-[var(--color-border)]">
             <th className="py-2 pr-3">Tarjeta</th>
             <th className="py-2 pr-3">Tipo</th>
             <th className="py-2 pr-3">Fecha</th>
-            <th className="py-2 pr-3 text-right">Días</th>
+            <th className="py-2 pr-3 text-right">Dias</th>
           </tr>
         </thead>
         <tbody>
           {events.map((e, i) => {
             const tone =
               e.type === "Pago" && e.days <= 5
-                ? "text-red-400"
+                ? "text-[var(--color-negative)]"
                 : e.days <= 3
-                  ? "text-amber-400"
+                  ? "text-[var(--color-warning)]"
                   : "text-[var(--color-muted)]";
             return (
-              <tr key={i} className="border-b border-[var(--color-border)]/50">
-                <td className="py-2 pr-3">{e.card}</td>
+              <tr key={i} className="border-b border-[var(--color-border)]">
+                <td className="py-2 pr-3 font-bold">{e.card}</td>
                 <td className="py-2 pr-3">
                   <Badge tone={e.type === "Pago" ? "warning" : "accent"}>
-                    {e.type}
+                    {e.type.toUpperCase()}
                   </Badge>
                 </td>
                 <td className="py-2 pr-3">
                   {monthShortES(e.date.getMonth() + 1)} {e.date.getDate()}
                 </td>
-                <td className={`py-2 pr-3 text-right ${tone}`}>
-                  {e.days === 0 ? "Hoy" : `${e.days} día${e.days === 1 ? "" : "s"}`}
+                <td className={`py-2 pr-3 text-right font-bold ${tone}`}>
+                  {e.days === 0 ? "HOY" : `${e.days}d`}
                 </td>
               </tr>
             );

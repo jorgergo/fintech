@@ -42,7 +42,6 @@ export default function SettingsManager({
 }) {
   const [pending, startTransition] = useTransition();
 
-  // Profile form
   const [birthYear, setBirthYear] = useState(profile?.birthYear ?? 2002);
   const [retirementAge, setRetirementAge] = useState(profile?.retirementAge ?? 65);
   const [monthlyContribution, setMonthlyContribution] = useState(
@@ -58,12 +57,10 @@ export default function SettingsManager({
   );
   const [commissionRate, setCommissionRate] = useState(profile?.commissionRate ?? 0.0087);
 
-  // Position targets
   const [targets, setTargets] = useState(
     positions.map((p) => ({ id: p.id, targetPct: p.targetPct, isLegacy: p.isLegacy })),
   );
 
-  // New instrument form
   const [showAddForm, setShowAddForm] = useState(false);
   const [newTicker, setNewTicker] = useState("");
   const [newCurrency, setNewCurrency] = useState("USD");
@@ -143,14 +140,8 @@ export default function SettingsManager({
     URL.revokeObjectURL(url);
   }
 
-  const inputClass =
-    "w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]";
-  const btnPrimary =
-    "rounded-md bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50 transition";
-  const btnDanger =
-    "rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50 transition";
-  const btnSecondary =
-    "rounded-md border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-[var(--color-text)] hover:bg-[var(--color-surface-2)] disabled:opacity-50 transition";
+  const inputClass = "nb-input w-full px-3 py-2 text-sm tabular";
+  const selectClass = "nb-input w-full px-3 py-2 text-sm";
 
   return (
     <div className="space-y-6">
@@ -160,43 +151,55 @@ export default function SettingsManager({
         <CardBody>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs text-[var(--color-muted)] mb-1">Año de nacimiento</label>
+              <label className="block text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold mb-1">
+                Ano de nacimiento
+              </label>
               <input type="number" value={birthYear} onChange={(e) => setBirthYear(+e.target.value)} className={inputClass} />
             </div>
             <div>
-              <label className="block text-xs text-[var(--color-muted)] mb-1">Edad de retiro</label>
+              <label className="block text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold mb-1">
+                Edad de retiro
+              </label>
               <input type="number" value={retirementAge} onChange={(e) => setRetirementAge(+e.target.value)} className={inputClass} />
             </div>
             <div>
-              <label className="block text-xs text-[var(--color-muted)] mb-1">Aportación mensual (MXN)</label>
+              <label className="block text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold mb-1">
+                Aportacion mensual (MXN)
+              </label>
               <input type="number" value={monthlyContribution} onChange={(e) => setMonthlyContribution(+e.target.value)} className={inputClass} />
             </div>
             <div>
-              <label className="block text-xs text-[var(--color-muted)] mb-1">Régimen fiscal</label>
-              <select value={taxRegime} onChange={(e) => setTaxRegime(e.target.value)} className={inputClass}>
+              <label className="block text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold mb-1">
+                Regimen fiscal
+              </label>
+              <select value={taxRegime} onChange={(e) => setTaxRegime(e.target.value)} className={selectClass}>
                 <option value="SUELDOS_Y_SALARIOS">Sueldos y salarios</option>
                 <option value="ACTIVIDAD_EMPRESARIAL">Actividad empresarial</option>
                 <option value="HONORARIOS">Honorarios</option>
               </select>
             </div>
             <div>
-              <label className="block text-xs text-[var(--color-muted)] mb-1">W-8BEN</label>
-              <select value={hasW8Ben} onChange={(e) => setHasW8Ben(e.target.value)} className={inputClass}>
+              <label className="block text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold mb-1">
+                W-8BEN
+              </label>
+              <select value={hasW8Ben} onChange={(e) => setHasW8Ben(e.target.value)} className={selectClass}>
                 <option value="unknown">Sin confirmar</option>
-                <option value="yes">Sí</option>
+                <option value="yes">Si</option>
                 <option value="no">No</option>
               </select>
             </div>
             <div>
-              <label className="block text-xs text-[var(--color-muted)] mb-1">Comisión efectiva (decimal)</label>
+              <label className="block text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold mb-1">
+                Comision efectiva
+              </label>
               <input type="number" step="0.0001" value={commissionRate} onChange={(e) => setCommissionRate(+e.target.value)} className={inputClass} />
             </div>
           </div>
           <div className="mt-4 flex items-center gap-3">
-            <button onClick={handleSaveProfile} disabled={pending} className={btnPrimary}>
-              Guardar perfil
+            <button onClick={handleSaveProfile} disabled={pending} className="nb-btn px-5 py-2.5 bg-[var(--color-primary)] text-black font-[var(--font-heading)] text-sm uppercase disabled:opacity-50">
+              GUARDAR PERFIL
             </button>
-            {profileSaved && <span className="text-sm text-emerald-400">Guardado</span>}
+            {profileSaved && <Badge tone="positive">GUARDADO</Badge>}
           </div>
         </CardBody>
       </Card>
@@ -206,59 +209,59 @@ export default function SettingsManager({
         <CardHeader
           title="Portafolio e instrumentos"
           action={
-            <button onClick={() => setShowAddForm(!showAddForm)} className={btnSecondary}>
-              {showAddForm ? "Cancelar" : "+ Agregar instrumento"}
+            <button onClick={() => setShowAddForm(!showAddForm)} className="nb-btn px-3 py-1.5 text-xs font-[var(--font-mono)] font-bold uppercase bg-[var(--color-surface-2)] text-[var(--color-text)]">
+              {showAddForm ? "CANCELAR" : "+ AGREGAR"}
             </button>
           }
         />
         <CardBody>
           {showAddForm && (
-            <div className="mb-4 p-4 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] space-y-3">
+            <div className="mb-4 p-4 border-3 border-dashed border-[var(--color-border)] bg-[var(--color-surface-2)] space-y-3">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div>
-                  <label className="block text-xs text-[var(--color-muted)] mb-1">Ticker</label>
+                  <label className="block text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold mb-1">Ticker</label>
                   <input value={newTicker} onChange={(e) => setNewTicker(e.target.value)} placeholder="e.g. QQQM N" className={inputClass} />
                 </div>
                 <div>
-                  <label className="block text-xs text-[var(--color-muted)] mb-1">Moneda</label>
-                  <select value={newCurrency} onChange={(e) => setNewCurrency(e.target.value)} className={inputClass}>
+                  <label className="block text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold mb-1">Moneda</label>
+                  <select value={newCurrency} onChange={(e) => setNewCurrency(e.target.value)} className={selectClass}>
                     <option value="USD">USD</option>
                     <option value="MXN">MXN</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs text-[var(--color-muted)] mb-1">Target %</label>
+                  <label className="block text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold mb-1">Target %</label>
                   <input type="number" step="0.01" value={newTarget} onChange={(e) => setNewTarget(+e.target.value)} className={inputClass} />
                 </div>
                 <div>
-                  <label className="block text-xs text-[var(--color-muted)] mb-1">Descripción</label>
+                  <label className="block text-[11px] text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold mb-1">Descripcion</label>
                   <input value={newDesc} onChange={(e) => setNewDesc(e.target.value)} className={inputClass} />
                 </div>
               </div>
-              <button onClick={handleAddInstrument} disabled={pending || !newTicker.trim()} className={btnPrimary}>
-                Agregar
+              <button onClick={handleAddInstrument} disabled={pending || !newTicker.trim()} className="nb-btn px-4 py-2 bg-[var(--color-primary)] text-black font-[var(--font-heading)] text-xs uppercase disabled:opacity-50">
+                AGREGAR
               </button>
             </div>
           )}
 
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm font-[var(--font-mono)]">
               <thead>
-                <tr className="text-left text-[var(--color-muted)] border-b border-[var(--color-border)]">
+                <tr className="text-left text-[11px] uppercase tracking-wider text-[var(--color-muted)] border-b-3 border-[var(--color-border)]">
                   <th className="py-2 pr-4">Ticker</th>
                   <th className="py-2 pr-4">Moneda</th>
-                  <th className="py-2 pr-4">Títulos</th>
+                  <th className="py-2 pr-4">Titulos</th>
                   <th className="py-2 pr-4">Legacy</th>
                   <th className="py-2 pr-4">Target %</th>
                   <th className="py-2 pr-4"></th>
                 </tr>
               </thead>
               <tbody>
-                {positions.map((p, i) => {
+                {positions.map((p) => {
                   const t = targets.find((tt) => tt.id === p.id);
                   return (
-                    <tr key={p.id} className="border-b border-[var(--color-border)]/50">
-                      <td className="py-2 pr-4 font-mono">{p.ticker}</td>
+                    <tr key={p.id} className="border-b border-[var(--color-border)]">
+                      <td className="py-2 pr-4 font-bold">{p.ticker}</td>
                       <td className="py-2 pr-4">{p.currency}</td>
                       <td className="py-2 pr-4 tabular">{p.titles}</td>
                       <td className="py-2 pr-4">
@@ -272,7 +275,6 @@ export default function SettingsManager({
                               ),
                             )
                           }
-                          className="rounded"
                         />
                       </td>
                       <td className="py-2 pr-4">
@@ -287,7 +289,7 @@ export default function SettingsManager({
                               ),
                             )
                           }
-                          className={inputClass + " w-24"}
+                          className="nb-input w-24 px-2 py-1 text-xs tabular"
                         />
                       </td>
                       <td className="py-2">
@@ -295,7 +297,7 @@ export default function SettingsManager({
                           <button
                             onClick={() => handleDeletePosition(p.id)}
                             disabled={pending}
-                            className="text-xs text-red-400 hover:text-red-300"
+                            className="text-xs text-[var(--color-negative)] font-bold hover:underline uppercase"
                           >
                             Eliminar
                           </button>
@@ -308,10 +310,10 @@ export default function SettingsManager({
             </table>
           </div>
           <div className="mt-4 flex items-center gap-3">
-            <button onClick={handleSaveTargets} disabled={pending} className={btnPrimary}>
-              Guardar targets
+            <button onClick={handleSaveTargets} disabled={pending} className="nb-btn px-5 py-2.5 bg-[var(--color-primary)] text-black font-[var(--font-heading)] text-sm uppercase disabled:opacity-50">
+              GUARDAR TARGETS
             </button>
-            {targetsSaved && <span className="text-sm text-emerald-400">Guardado</span>}
+            {targetsSaved && <Badge tone="positive">GUARDADO</Badge>}
           </div>
         </CardBody>
       </Card>
@@ -321,27 +323,27 @@ export default function SettingsManager({
         <CardHeader title="Datos" />
         <CardBody>
           <div className="flex flex-wrap gap-3">
-            <button onClick={handleExport} className={btnSecondary}>
-              Exportar JSON
+            <button onClick={handleExport} className="nb-btn px-4 py-2.5 bg-[var(--color-surface-2)] text-[var(--color-text)] font-[var(--font-mono)] text-xs font-bold uppercase">
+              EXPORTAR JSON
             </button>
             {!confirmReset ? (
-              <button onClick={() => setConfirmReset(true)} className={btnDanger}>
-                Resetear base de datos
+              <button onClick={() => setConfirmReset(true)} className="nb-btn px-4 py-2.5 bg-[var(--color-negative)] text-black font-[var(--font-mono)] text-xs font-bold uppercase">
+                RESETEAR DB
               </button>
             ) : (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-red-400">Esto borra todo.</span>
-                <button onClick={handleReset} disabled={pending} className={btnDanger}>
-                  Confirmar reset
+                <span className="text-sm text-[var(--color-negative)] font-[var(--font-mono)] font-bold">ESTO BORRA TODO.</span>
+                <button onClick={handleReset} disabled={pending} className="nb-btn px-3 py-2 bg-[var(--color-negative)] text-black font-[var(--font-mono)] text-xs font-bold uppercase">
+                  CONFIRMAR
                 </button>
-                <button onClick={() => setConfirmReset(false)} className={btnSecondary}>
-                  Cancelar
+                <button onClick={() => setConfirmReset(false)} className="nb-btn px-3 py-2 bg-[var(--color-surface-2)] text-[var(--color-text)] font-[var(--font-mono)] text-xs font-bold uppercase">
+                  CANCELAR
                 </button>
               </div>
             )}
           </div>
-          <p className="mt-3 text-xs text-[var(--color-muted)]">
-            Después de resetear, ejecuta <code className="bg-[var(--color-surface-2)] px-1 rounded">npm run db:seed</code> para re-poblar los datos iniciales.
+          <p className="mt-3 text-xs text-[var(--color-muted)] font-[var(--font-mono)]">
+            Despues de resetear, ejecuta <code className="bg-[var(--color-surface-2)] border-2 border-[var(--color-border)] px-1.5 py-0.5">npm run db:seed</code> para re-poblar.
           </p>
         </CardBody>
       </Card>

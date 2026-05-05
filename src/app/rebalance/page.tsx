@@ -11,14 +11,13 @@ export default async function RebalancePage() {
   const profile = await prisma.userProfile.findFirst();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight">
+        <h2 className="font-[var(--font-heading)] text-3xl uppercase tracking-tight">
           Rebalanceo del PPR
         </h2>
-        <p className="text-sm text-[var(--color-muted)] mt-1">
-          Calcula cuántos títulos comprar este mes para acercarte a tu objetivo
-          60/40 sin pasarte del efectivo.
+        <p className="text-sm text-[var(--color-muted)] font-[var(--font-mono)] mt-2 uppercase tracking-wider">
+          Calcula cuantos titulos comprar este mes para acercarte a tu objetivo 60/40.
         </p>
       </div>
       <Rebalancer

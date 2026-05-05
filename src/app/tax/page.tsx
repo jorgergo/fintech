@@ -12,13 +12,13 @@ export default async function TaxPage() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h2 className="text-lg font-semibold text-[var(--color-text)]">
+        <h2 className="font-[var(--font-heading)] text-3xl uppercase tracking-tight">
           Deducciones fiscales
         </h2>
-        <p className="text-sm text-[var(--color-muted)] mt-1">
-          Seguimiento de aportaciones al PPR y cálculo de deducciones (LISR Art. 151)
+        <p className="text-sm text-[var(--color-muted)] font-[var(--font-mono)] mt-2 uppercase tracking-wider">
+          Seguimiento de aportaciones al PPR y calculo de deducciones (LISR Art. 151)
         </p>
       </div>
 

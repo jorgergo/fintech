@@ -8,25 +8,25 @@ export default function TaxProgress({ summary }: { summary: TaxSummary }) {
     <div className="space-y-5">
       <div>
         <div className="flex items-baseline justify-between mb-2">
-          <span className="text-xs text-[var(--color-muted)]">
-            Deducción {summary.year}
+          <span className="text-xs text-[var(--color-muted)] font-[var(--font-mono)] uppercase tracking-wider font-bold">
+            Deduccion {summary.year}
           </span>
-          <span className="text-xs tabular text-[var(--color-muted)]">
+          <span className="text-xs tabular text-[var(--color-muted)] font-[var(--font-mono)]">
             {formatMXN(summary.deductibleAmount)} / {formatMXN(summary.maxDeduction)}
           </span>
         </div>
         <ProgressBar
           value={summary.deductibleAmount}
           max={summary.maxDeduction || 1}
-          tone={summary.progressPct >= 1 ? "positive" : "accent"}
+          tone={summary.progressPct >= 1 ? "positive" : "primary"}
         />
-        <div className="text-[11px] text-[var(--color-muted)] mt-1 tabular">
+        <div className="text-[11px] text-[var(--color-muted)] mt-2 tabular font-[var(--font-mono)]">
           {formatPct(summary.progressPct)} del tope anual
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <Stat
-          label="Devolución estimada"
+          label="Devolucion estimada"
           value={formatMXN(summary.estimatedRefund)}
           tone="positive"
         />

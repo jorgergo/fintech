@@ -9,7 +9,7 @@ export function Card({
 }) {
   return (
     <section
-      className={`rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] ${className}`}
+      className={`nb-card p-0 ${className}`}
     >
       {children}
     </section>
@@ -26,11 +26,15 @@ export function CardHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex items-start justify-between p-5 border-b border-[var(--color-border)]">
+    <div className="flex items-start justify-between p-5 border-b-3 border-[var(--color-border)]">
       <div>
-        <h2 className="text-sm font-semibold tracking-tight">{title}</h2>
+        <h2 className="font-[var(--font-heading)] text-sm font-black uppercase tracking-wider text-[var(--color-text)]">
+          {title}
+        </h2>
         {subtitle && (
-          <p className="text-xs text-[var(--color-muted)] mt-0.5">{subtitle}</p>
+          <p className="text-xs text-[var(--color-muted)] mt-1 font-[var(--font-mono)]">
+            {subtitle}
+          </p>
         )}
       </div>
       {action}

@@ -21,7 +21,7 @@ export default function CardAlerts({
     <div className="space-y-5">
       <div className="grid grid-cols-2 gap-4">
         <Stat
-          label="Utilización global"
+          label="Utilizacion global"
           value={formatPct(utilization)}
           hint={`${formatMXN(totalBalance)} / ${formatMXN(totalLimit)}`}
           tone={utilTone}
@@ -30,7 +30,7 @@ export default function CardAlerts({
       </div>
       <div className="space-y-2">
         {alerts.length === 0 && (
-          <div className="text-xs text-[var(--color-muted)]">
+          <div className="text-xs text-[var(--color-muted)] font-[var(--font-mono)]">
             Sin alertas — todo en orden.
           </div>
         )}
@@ -44,11 +44,11 @@ export default function CardAlerts({
           return (
             <div
               key={i}
-              className="flex items-center justify-between gap-3 text-xs px-3 py-2 rounded-md bg-[var(--color-surface-2)]"
+              className="flex items-center justify-between gap-3 text-xs px-4 py-3 border-3 border-[var(--color-border)] bg-[var(--color-surface-2)]"
             >
               <div className="flex items-center gap-2 min-w-0">
                 <Badge tone={tone}>{a.cardName}</Badge>
-                <span className="truncate text-[var(--color-text)]">
+                <span className="truncate text-[var(--color-text)] font-[var(--font-mono)]">
                   {a.message}
                 </span>
               </div>
